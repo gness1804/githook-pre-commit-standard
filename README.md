@@ -1,0 +1,1 @@
+# githook-pre-commit-standard
