@@ -1,0 +1,34 @@
+#!/bin/bash
+
+npm run lint
+npm run test
+
+exec 1>&2
+exec < /dev/tty
+
+consoleregexp='^\+.*console\.log('
+debuggerregexp='debugger'
+if test $(git diff --cached | grep $consoleregexp | wc -l) != 0
+then
+  exec git diff --cached | grep -ne $consoleregexp
+  read -p 'You have added one or more console logs in your modification. Are you sure want to continue? (y/n)' yn
+  echo $yn | grep ^[Yy]$
+  if [ $? -eq 0 ]
+  then
+    exit 0;
+  else
+    exit 1;
+  fi
+fi
+if test $(git diff --cached | grep $debuggerregexp | wc -l) != 0
+then
+  exec git diff --cached | grep -ne $debuggerregexp
+  read -p 'You have added one or more debuggers in your modification. Are you sure want to continue? (y/n)' yn
+  echo $yn | grep ^[Yy]$
+  if [ $? -eq 0 ]
+  then
+    exit 0;
+  else
+    exit 1;
+  fi
+fi
