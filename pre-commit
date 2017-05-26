@@ -1,7 +1,17 @@
 #!/bin/bash
 
-npm run lint
-npm run test
+# thanks to https://stackoverflow.com/questions/22009364/is-there-a-try-catch-command-in-bash for this "try/catch" code
+{
+    npm run lint
+} || {
+  exit 1
+}
+
+{
+    npm run test
+} || {
+  exit 1
+}
 
 exec 1>&2
 exec < /dev/tty
