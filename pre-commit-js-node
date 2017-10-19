@@ -12,24 +12,14 @@ if test "$(git rev-parse --abbrev-ref HEAD)" == master; then
   exit 1
 fi
 
-{
-    npm run lint
-} || {
-  exit 1
-}
-
-{
-    npm run test
-} || {
-  exit 1
-}
-
 exec 1>&2
 exec < /dev/tty
 
 consoleregexp='^\+.*console\.log('
 debuggerregexp='debugger'
 headregexp='HEAD'
+onlyregexp='only'
+
 if test $(git diff --cached | grep $consoleregexp | wc -l) != 0
 then
   exec git diff --cached | grep -ne $consoleregexp
@@ -66,3 +56,27 @@ then
     exit 1;
   fi
 fi
+if test $(git diff --cached | grep $onlyregexp | wc -l) != 0
+then
+  exec git diff --cached | grep -ne $onlyregexp
+  read -p 'You left the word "only" in your code, which may indicate a skipped test that you do not want to commit. Are you sure want to continue? (y/n)' yn
+  echo $yn | grep ^[Yy]$
+  if [ $? -eq 0 ]
+  then
+    exit 0;
+  else
+    exit 1;
+  fi
+fi
+
+{
+    npm run lint
+} || {
+  exit 1
+}
+
+{
+    npm run test
+} || {
+  exit 1
+}
