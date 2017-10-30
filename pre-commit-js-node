@@ -39,7 +39,7 @@ then
   echo $yn | grep ^[Yy]$
   if [ $? -eq 0 ]
   then
-    exit 0;
+    echo 'Ok, continuing.';
   else
     exit 1;
   fi
@@ -51,7 +51,7 @@ then
   echo $yn | grep ^[Yy]$
   if [ $? -eq 0 ]
   then
-    exit 0;
+   echo 'Ok, continuing.';
   else
     exit 1;
   fi
@@ -63,7 +63,7 @@ then
   echo $yn | grep ^[Yy]$
   if [ $? -eq 0 ]
   then
-    exit 0;
+    echo 'Ok, continuing.';
   else
     exit 1;
   fi
