@@ -19,6 +19,7 @@ consoleregexp='^\+.*console\.log('
 debuggerregexp='debugger'
 headregexp='HEAD'
 onlyregexp='only'
+draftregexp='draft'
 
 if test $(git diff --cached | grep $consoleregexp | wc -l) != 0
 then
@@ -27,7 +28,7 @@ then
   echo $yn | grep ^[Yy]$
   if [ $? -eq 0 ]
   then
-    exit 0;
+    echo 'Ok, continuing.';
   else
     exit 1;
   fi
@@ -51,7 +52,7 @@ then
   echo $yn | grep ^[Yy]$
   if [ $? -eq 0 ]
   then
-   echo 'Ok, continuing.';
+    echo 'Ok, continuing.';
   else
     exit 1;
   fi
@@ -60,6 +61,18 @@ if test $(git diff --cached | grep $onlyregexp | wc -l) != 0
 then
   exec git diff --cached | grep -ne $onlyregexp
   read -p 'You left the word "only" in your code, which may indicate a skipped test that you do not want to commit. Are you sure want to continue? (y/n)' yn
+  echo $yn | grep ^[Yy]$
+  if [ $? -eq 0 ]
+  then
+    echo 'Ok, continuing.';
+  else
+    exit 1;
+  fi
+fi
+if test $(git diff --cached | grep $draftregexp | wc -l) != 0
+then
+  exec git diff --cached | grep -ne $draftregexp
+  read -p 'You left the word "draft" in your code, which may indicate forgetting to change some data. Are you sure want to continue? (y/n)' yn
   echo $yn | grep ^[Yy]$
   if [ $? -eq 0 ]
   then
