@@ -20,6 +20,7 @@ debuggerregexp='debugger'
 headregexp='HEAD'
 onlyregexp='only'
 draftregexp='draft'
+dummyregexp='dummy'
 
 if test $(git diff --cached | grep $consoleregexp | wc -l) != 0
 then
@@ -73,6 +74,18 @@ if test $(git diff --cached | grep $draftregexp | wc -l) != 0
 then
   exec git diff --cached | grep -ne $draftregexp
   read -p 'You left the word "draft" in your code, which may indicate forgetting to change some data. Are you sure want to continue? (y/n)' yn
+  echo $yn | grep ^[Yy]$
+  if [ $? -eq 0 ]
+  then
+    echo 'Ok, continuing.';
+  else
+    exit 1;
+  fi
+fi
+if test $(git diff --cached | grep $dummyregexp | wc -l) != 0
+then
+  exec git diff --cached | grep -ne $dummyregexp
+  read -p 'You left the word "dummy" in your code, which may indicate leaving in a stub. Are you sure want to continue? (y/n)' yn
   echo $yn | grep ^[Yy]$
   if [ $? -eq 0 ]
   then
