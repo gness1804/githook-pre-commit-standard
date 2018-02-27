@@ -31,7 +31,7 @@ then
   then
     echo 'Ok, continuing.';
   else
-    exit 1;
+    git reset HEAD . && exit 1;
   fi
 fi
 if test $(git diff --cached | grep $debuggerregexp | wc -l) != 0
@@ -43,7 +43,7 @@ then
   then
     echo 'Ok, continuing.';
   else
-    exit 1;
+    git reset HEAD . && exit 1;
   fi
 fi
 if test $(git diff --cached | grep $headregexp | wc -l) != 0
@@ -55,7 +55,7 @@ then
   then
     echo 'Ok, continuing.';
   else
-    exit 1;
+    git reset HEAD . && exit 1;
   fi
 fi
 if test $(git diff --cached | grep $onlyregexp | wc -l) != 0
@@ -67,7 +67,7 @@ then
   then
     echo 'Ok, continuing.';
   else
-    exit 1;
+    git reset HEAD . && exit 1;
   fi
 fi
 if test $(git diff --cached | grep $draftregexp | wc -l) != 0
@@ -79,7 +79,7 @@ then
   then
     echo 'Ok, continuing.';
   else
-    exit 1;
+    git reset HEAD . && exit 1;
   fi
 fi
 if test $(git diff --cached | grep $dummyregexp | wc -l) != 0
@@ -91,7 +91,7 @@ then
   then
     echo 'Ok, continuing.';
   else
-    exit 1;
+    git reset HEAD . && exit 1;
   fi
 fi
 
