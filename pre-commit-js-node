@@ -98,17 +98,17 @@ fi
 {
     npm run lint
 } || {
-  exit 1
+  git reset HEAD . && exit 1;
 }
 
 {
     npm run test
 } || {
-  exit 1
+  git reset HEAD . && exit 1;
 }
 
 # {
 #     npm run flow
 # } || {
-#   exit 1
+#   git reset HEAD . && exit 1;
 # }
