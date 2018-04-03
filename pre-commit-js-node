@@ -21,6 +21,7 @@ headregexp='HEAD'
 onlyregexp='only'
 draftregexp='draft'
 dummyregexp='dummy'
+revertregexp='revert'
 
 if test $(git diff --cached | grep $consoleregexp | wc -l) != 0
 then
@@ -38,6 +39,18 @@ if test $(git diff --cached | grep $debuggerregexp | wc -l) != 0
 then
   exec git diff --cached | grep -ne $debuggerregexp
   read -p 'You have added one or more debuggers in your modification. Are you sure want to continue? (y/n)' yn
+  echo $yn | grep ^[Yy]$
+  if [ $? -eq 0 ]
+  then
+    echo 'Ok, continuing.';
+  else
+    git reset HEAD . && exit 1;
+  fi
+fi
+if test $(git diff --cached | grep $revertregexp | wc -l) != 0
+then
+  exec git diff --cached | grep -ne $revertregexp
+  read -p 'You have the word "revert" in your code, which probably indicates that you are trying to commit a file that you should not. Are you sure want to continue? (y/n)' yn
   echo $yn | grep ^[Yy]$
   if [ $? -eq 0 ]
   then
