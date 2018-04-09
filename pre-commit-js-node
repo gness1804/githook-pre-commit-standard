@@ -31,15 +31,7 @@ then
 fi
 }
 
-consoleregexp='^\+.*console\.log('
-debuggerregexp='debugger'
-# headregexp='HEAD'
-# onlyregexp='only'
-# draftregexp='draft'
-# dummyregexp='dummy'
-# revertregexp='revert'
-
-array=('^\+.*console\.log(' 'debugger')
+array=('^\+.*console\.log(' 'debugger' 'HEAD' 'only' 'draft' 'dummy' 'revert')
 
 for i in "${array[@]}"
 do
