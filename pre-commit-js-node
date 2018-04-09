@@ -20,7 +20,7 @@ function checkWarnings()
   if test $(git diff --cached | grep $1 | wc -l) != 0
 then
   exec git diff --cached | grep -ne $1
-  read -p 'You have added one or more $1 in your modification. Are you sure want to continue? (y/n)' yn
+  read -p "Warning: $1. Continue? y/n" yn
   echo $yn | grep ^[Yy]$
   if [ $? -eq 0 ]
   then
