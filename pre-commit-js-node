@@ -15,7 +15,7 @@ fi
 exec 1>&2
 exec < /dev/tty
 
-function checkRegex()
+function checkWarnings()
 {
   if test $(git diff --cached | grep $1 | wc -l) != 0
 then
@@ -31,97 +31,12 @@ then
 fi
 }
 
-array=('^\+.*console\.log(' 'debugger' 'HEAD' 'only' 'draft' 'dummy' 'revert')
+warnings=('^\+.*console\.log(' 'debugger' 'HEAD' 'only' 'draft' 'dummy' 'revert')
 
-for i in "${array[@]}"
+for i in "${warnings[@]}"
 do
-  checkRegex "$i"
+  checkWarnings "$i"
 done
-
-# if test $(git diff --cached | grep $consoleregexp | wc -l) != 0
-# then
-#   exec git diff --cached | grep -ne $consoleregexp
-#   read -p 'You have added one or more console logs in your modification. Are you sure want to continue? (y/n)' yn
-#   echo $yn | grep ^[Yy]$
-#   if [ $? -eq 0 ]
-#   then
-#     echo 'Ok, continuing.';
-#   else
-#     git reset HEAD . && exit 1;
-#   fi
-# fi
-# if test $(git diff --cached | grep $debuggerregexp | wc -l) != 0
-# then
-#   exec git diff --cached | grep -ne $debuggerregexp
-#   read -p 'You have added one or more debuggers in your modification. Are you sure want to continue? (y/n)' yn
-#   echo $yn | grep ^[Yy]$
-#   if [ $? -eq 0 ]
-#   then
-#     echo 'Ok, continuing.';
-#   else
-#     git reset HEAD . && exit 1;
-#   fi
-# fi
-# if test $(git diff --cached | grep $revertregexp | wc -l) != 0
-# then
-#   exec git diff --cached | grep -ne $revertregexp
-#   read -p 'You have the word "revert" in your code, which probably indicates that you are trying to commit a file that you should not. Are you sure want to continue? (y/n)' yn
-#   echo $yn | grep ^[Yy]$
-#   if [ $? -eq 0 ]
-#   then
-#     echo 'Ok, continuing.';
-#   else
-#     git reset HEAD . && exit 1;
-#   fi
-# fi
-# if test $(git diff --cached | grep $headregexp | wc -l) != 0
-# then
-#   exec git diff --cached | grep -ne $headregexp
-#   read -p 'There is one or more instance of "HEAD" in your modification; this may indicate Git merge conflict material that should be removed. Are you sure want to continue? (y/n)' yn
-#   echo $yn | grep ^[Yy]$
-#   if [ $? -eq 0 ]
-#   then
-#     echo 'Ok, continuing.';
-#   else
-#     git reset HEAD . && exit 1;
-#   fi
-# fi
-# if test $(git diff --cached | grep $onlyregexp | wc -l) != 0
-# then
-#   exec git diff --cached | grep -ne $onlyregexp
-#   read -p 'You left the word "only" in your code, which may indicate a skipped test that you do not want to commit. Are you sure want to continue? (y/n)' yn
-#   echo $yn | grep ^[Yy]$
-#   if [ $? -eq 0 ]
-#   then
-#     echo 'Ok, continuing.';
-#   else
-#     git reset HEAD . && exit 1;
-#   fi
-# fi
-# if test $(git diff --cached | grep $draftregexp | wc -l) != 0
-# then
-#   exec git diff --cached | grep -ne $draftregexp
-#   read -p 'You left the word "draft" in your code, which may indicate forgetting to change some data. Are you sure want to continue? (y/n)' yn
-#   echo $yn | grep ^[Yy]$
-#   if [ $? -eq 0 ]
-#   then
-#     echo 'Ok, continuing.';
-#   else
-#     git reset HEAD . && exit 1;
-#   fi
-# fi
-# if test $(git diff --cached | grep $dummyregexp | wc -l) != 0
-# then
-#   exec git diff --cached | grep -ne $dummyregexp
-#   read -p 'You left the word "dummy" in your code, which may indicate leaving in a stub. Are you sure want to continue? (y/n)' yn
-#   echo $yn | grep ^[Yy]$
-#   if [ $? -eq 0 ]
-#   then
-#     echo 'Ok, continuing.';
-#   else
-#     git reset HEAD . && exit 1;
-#   fi
-# fi
 
 {
     npm run lint
