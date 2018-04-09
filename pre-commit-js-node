@@ -2,126 +2,63 @@
 
 # thanks to https://stackoverflow.com/questions/22009364/is-there-a-try-catch-command-in-bash and https://stackoverflow.com/questions/30466807/how-to-get-the-current-git-branch-in-shell
 
-if test "$(git rev-parse --abbrev-ref HEAD)" == develop; then
-  echo Oops, you are on the develop branch. Please switch branches before you commit. >&2
+# verify that user is not trying to commit to master or develop
+function checkBranches()
+{
+if test "$(git rev-parse --abbrev-ref HEAD)" == $1; then
+  echo "Oops, you are on the $1 branch. Please switch branches before you commit." >&2
   git reset HEAD . && exit 1;
 fi
+}
 
-if test "$(git rev-parse --abbrev-ref HEAD)" == master; then
-  echo Oops, you are on the master branch. Please switch branches before you commit. >&2
-  git reset HEAD . && exit 1;
-fi
+forbiddenBranches=(master develop)
+
+for i in "${forbiddenBranches[@]}"
+do
+  checkBranches "$i"
+done
 
 exec 1>&2
 exec < /dev/tty
 
-consoleregexp='^\+.*console\.log('
-debuggerregexp='debugger'
-headregexp='HEAD'
-onlyregexp='only'
-draftregexp='draft'
-dummyregexp='dummy'
-revertregexp='revert'
-
-if test $(git diff --cached | grep $consoleregexp | wc -l) != 0
-then
-  exec git diff --cached | grep -ne $consoleregexp
-  read -p 'You have added one or more console logs in your modification. Are you sure want to continue? (y/n)' yn
-  echo $yn | grep ^[Yy]$
-  if [ $? -eq 0 ]
-  then
-    echo 'Ok, continuing.';
-  else
-    git reset HEAD . && exit 1;
-  fi
-fi
-if test $(git diff --cached | grep $debuggerregexp | wc -l) != 0
-then
-  exec git diff --cached | grep -ne $debuggerregexp
-  read -p 'You have added one or more debuggers in your modification. Are you sure want to continue? (y/n)' yn
-  echo $yn | grep ^[Yy]$
-  if [ $? -eq 0 ]
-  then
-    echo 'Ok, continuing.';
-  else
-    git reset HEAD . && exit 1;
-  fi
-fi
-if test $(git diff --cached | grep $revertregexp | wc -l) != 0
-then
-  exec git diff --cached | grep -ne $revertregexp
-  read -p 'You have the word "revert" in your code, which probably indicates that you are trying to commit a file that you should not. Are you sure want to continue? (y/n)' yn
-  echo $yn | grep ^[Yy]$
-  if [ $? -eq 0 ]
-  then
-    echo 'Ok, continuing.';
-  else
-    git reset HEAD . && exit 1;
-  fi
-fi
-if test $(git diff --cached | grep $headregexp | wc -l) != 0
-then
-  exec git diff --cached | grep -ne $headregexp
-  read -p 'There is one or more instance of "HEAD" in your modification; this may indicate Git merge conflict material that should be removed. Are you sure want to continue? (y/n)' yn
-  echo $yn | grep ^[Yy]$
-  if [ $? -eq 0 ]
-  then
-    echo 'Ok, continuing.';
-  else
-    git reset HEAD . && exit 1;
-  fi
-fi
-if test $(git diff --cached | grep $onlyregexp | wc -l) != 0
-then
-  exec git diff --cached | grep -ne $onlyregexp
-  read -p 'You left the word "only" in your code, which may indicate a skipped test that you do not want to commit. Are you sure want to continue? (y/n)' yn
-  echo $yn | grep ^[Yy]$
-  if [ $? -eq 0 ]
-  then
-    echo 'Ok, continuing.';
-  else
-    git reset HEAD . && exit 1;
-  fi
-fi
-if test $(git diff --cached | grep $draftregexp | wc -l) != 0
-then
-  exec git diff --cached | grep -ne $draftregexp
-  read -p 'You left the word "draft" in your code, which may indicate forgetting to change some data. Are you sure want to continue? (y/n)' yn
-  echo $yn | grep ^[Yy]$
-  if [ $? -eq 0 ]
-  then
-    echo 'Ok, continuing.';
-  else
-    git reset HEAD . && exit 1;
-  fi
-fi
-if test $(git diff --cached | grep $dummyregexp | wc -l) != 0
-then
-  exec git diff --cached | grep -ne $dummyregexp
-  read -p 'You left the word "dummy" in your code, which may indicate leaving in a stub. Are you sure want to continue? (y/n)' yn
-  echo $yn | grep ^[Yy]$
-  if [ $? -eq 0 ]
-  then
-    echo 'Ok, continuing.';
-  else
-    git reset HEAD . && exit 1;
-  fi
-fi
-
+# check for potentially problematic code that shouldn't be commited
+function checkWarnings()
 {
-    npm run lint
-} || {
-  git reset HEAD . && exit 1;
+  if test $(git diff --cached | grep $1 | wc -l) != 0
+then
+  exec git diff --cached | grep -ne $1
+  read -p "Warning: $1. Continue? y/n" yn
+  echo $yn | grep ^[Yy]$
+  if [ $? -eq 0 ]
+  then
+    echo 'Ok, continuing.';
+  else
+    git reset HEAD . && exit 1;
+  fi
+fi
 }
 
+warnings=('^\+.*console\.log(' 'debugger' 'HEAD' 'only' 'draft' 'dummy' 'revert')
+
+for i in "${warnings[@]}"
+do
+  checkWarnings "$i"
+done
+
+# run npm commands like lint and test against the changes to be potentially committed
+function checkNpmCommands()
 {
-    npm run test
-} || {
-  git reset HEAD . && exit 1;
+  {
+      $1
+  } || {
+    echo "'$1' failed."
+    git reset HEAD . && exit 1;
+  }
 }
 
-# {
-#     npm run flow
-# } || {
-#   git reset HEAD . && exit 1;
-# }
+npmCommands=('npm run lint' 'npm run test')
+
+for i in "${npmCommands[@]}"
+do
+  checkNpmCommands "$i"
+done
