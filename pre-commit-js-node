@@ -2,15 +2,20 @@
 
 # thanks to https://stackoverflow.com/questions/22009364/is-there-a-try-catch-command-in-bash and https://stackoverflow.com/questions/30466807/how-to-get-the-current-git-branch-in-shell
 
-if test "$(git rev-parse --abbrev-ref HEAD)" == develop; then
-  echo Oops, you are on the develop branch. Please switch branches before you commit. >&2
+function checkBranches()
+{
+if test "$(git rev-parse --abbrev-ref HEAD)" == $1; then
+  echo "Oops, you are on the $1 branch. Please switch branches before you commit." >&2
   git reset HEAD . && exit 1;
 fi
+}
 
-if test "$(git rev-parse --abbrev-ref HEAD)" == master; then
-  echo Oops, you are on the master branch. Please switch branches before you commit. >&2
-  git reset HEAD . && exit 1;
-fi
+forbiddenBranches=(master develop)
+
+for i in "${forbiddenBranches[@]}"
+do
+  checkBranches "$i"
+done
 
 exec 1>&2
 exec < /dev/tty
