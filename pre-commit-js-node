@@ -2,6 +2,7 @@
 
 # thanks to https://stackoverflow.com/questions/22009364/is-there-a-try-catch-command-in-bash and https://stackoverflow.com/questions/30466807/how-to-get-the-current-git-branch-in-shell
 
+# verify that user is not trying to commit to master or develop
 function checkBranches()
 {
 if test "$(git rev-parse --abbrev-ref HEAD)" == $1; then
@@ -20,6 +21,7 @@ done
 exec 1>&2
 exec < /dev/tty
 
+# check for potentially problematic code that shouldn't be commited
 function checkWarnings()
 {
   if test $(git diff --cached | grep $1 | wc -l) != 0
@@ -43,20 +45,20 @@ do
   checkWarnings "$i"
 done
 
+# run npm commands like lint and test against the changes to be potentially committed
+function checkNpmCommands()
 {
-    npm run lint
-} || {
-  git reset HEAD . && exit 1;
+  {
+      $1
+  } || {
+    echo "'$1' failed."
+    git reset HEAD . && exit 1;
+  }
 }
 
-{
-    npm run test
-} || {
-  git reset HEAD . && exit 1;
-}
+npmCommands=('npm run lint' 'npm run test')
 
-# {
-#     npm run flow
-# } || {
-#   git reset HEAD . && exit 1;
-# }
+for i in "${npmCommands[@]}"
+do
+  checkNpmCommands "$i"
+done
