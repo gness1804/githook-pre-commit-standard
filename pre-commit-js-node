@@ -2,12 +2,17 @@
 
 # thanks to https://stackoverflow.com/questions/22009364/is-there-a-try-catch-command-in-bash and https://stackoverflow.com/questions/30466807/how-to-get-the-current-git-branch-in-shell
 
+function resetAndExit()
+{
+  git reset HEAD . && exit 1;
+}
+
 # verify that user is not trying to commit to master or develop
 function checkBranches()
 {
 if test "$(git rev-parse --abbrev-ref HEAD)" == $1; then
   echo "Oops, you are on the $1 branch. Please switch branches before you commit." >&2
-  git reset HEAD . && exit 1;
+  resetAndExit
 fi
 }
 
@@ -33,7 +38,7 @@ then
   then
     echo 'Ok, continuing.';
   else
-    git reset HEAD . && exit 1;
+    resetAndExit
   fi
 fi
 }
@@ -52,7 +57,7 @@ function checkNpmCommands()
       $1
   } || {
     echo "'$1' failed."
-    git reset HEAD . && exit 1;
+    resetAndExit
   }
 }
 
