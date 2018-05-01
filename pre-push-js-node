@@ -1,0 +1,22 @@
+#!/bin/sh
+
+function resetAndExit()
+{
+  git reset HEAD . && exit 1;
+}
+
+# verify that a forbidden branch, such as an "exp" branch, is not being pushed up
+function checkBranches()
+{
+if test $(git rev-parse --abbrev-ref HEAD | grep $1) != 0; then
+  echo "Oops, you are trying to push a branch that you should not: $1. Please rename your branch before you try to push."
+  resetAndExit
+fi
+}
+
+forbiddenBranches=('^exp')
+
+for i in "${forbiddenBranches[@]}"
+do
+  checkBranches "$i"
+done
