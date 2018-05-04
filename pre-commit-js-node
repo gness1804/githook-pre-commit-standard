@@ -26,7 +26,7 @@ done
 exec 1>&2
 exec < /dev/tty
 
-function checkFakes ()
+function checkFakes()
 {
   if test $(find .  | grep -E -v 'node_modules|\/\.' | grep -c '.fake.js') != 0
   then
