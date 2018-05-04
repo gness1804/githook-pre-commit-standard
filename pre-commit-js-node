@@ -26,6 +26,18 @@ done
 exec 1>&2
 exec < /dev/tty
 
+function checkFakes ()
+{
+  if test $(find .  | grep -E -v 'node_modules|\/\.' | grep -c '.fake.js') != 0
+  then
+    echo 'Error: you have a fake file that you are trying to commit. Please delete this file and try again.'
+    resetAndExit
+  fi
+}
+
+
+checkFakes
+
 # check for potentially problematic code that shouldn't be commited
 function checkWarnings()
 {
