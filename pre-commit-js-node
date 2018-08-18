@@ -30,8 +30,14 @@ function checkFakes()
 {
   if test $(find .  | grep -E -v 'node_modules|\/\.' | grep -c '.fake.') != 0
   then
-    echo 'Error: you have a fake file that you are trying to commit. Please delete this file and try again.'
-    resetAndExit
+    read -p "Warning: there is a file named '*.fake.*'. Continue? y/n" yn
+    echo $yn | grep ^[Yy]$
+    if [ $? -eq 0 ]
+    then
+      echo 'Ok, continuing.';
+    else
+      resetAndExit
+    fi
   fi
 }
 
@@ -55,7 +61,7 @@ then
 fi
 }
 
-warnings=('^\+.*console\.log(' 'debugger' 'HEAD' 'it.only' 'draft' 'dummy' 'revert')
+warnings=('^\+.*console\.log(' 'debugger' 'HEAD' 'it.only' 'describe.only' 'draft' 'dummy' 'revert')
 
 for i in "${warnings[@]}"
 do
