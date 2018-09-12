@@ -68,6 +68,24 @@ do
   checkWarnings "$i"
 done
 
+# check for comments
+function checkComments()
+{
+  if test $(git diff --cached | grep '$1' | wc -l) != 0
+  then
+    read -p "Warning: comment. Continue? y/n" yn
+    echo $yn | grep ^[Yy]$
+  if [ $? -eq 0 ]
+  then
+    echo 'Ok, continuing.';
+  else
+    resetAndExit
+  fi
+fi
+}
+
+comments=('//')
+
 # run npm commands like lint and test against the changes to be potentially committed
 function checkNpmCommands()
 {
