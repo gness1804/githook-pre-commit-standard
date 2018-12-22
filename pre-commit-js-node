@@ -61,7 +61,7 @@ then
 fi
 }
 
-warnings=('^\+.*console\.log(' 'debugger' 'HEAD' 'it.only' 'describe.only' 'draft' 'dummy' 'revert' 'TODO')
+warnings=('^\+.*console\.log(' 'debugger' 'HEAD' 'it.only' 'describe.only' 'draft' 'dummy' 'revert' 'TODO', 'it.skip')
 
 for i in "${warnings[@]}"
 do
