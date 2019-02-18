@@ -98,6 +98,9 @@ function checkNpmCommands()
 }
 
 npmCommands=('npm run lint' 'npm run test')
+## others to consider:
+# 'npm run stylelint'
+# 'npm run flow'
 
 for i in "${npmCommands[@]}"
 do
