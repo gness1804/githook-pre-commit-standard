@@ -27,6 +27,8 @@ module.exports = {
     'no-unused-vars': 'warn',
     'arrow-parens': 'off',
     'operator-linebreak': 'off',
+    'implicit-arrow-linebreak': 'off',
+    'function-paren-newline': 'off',
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
   }
