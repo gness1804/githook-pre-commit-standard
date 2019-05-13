@@ -64,6 +64,7 @@ getCurrentBranch()
   .then(() => promisifiedExec('npm run test'))
   .then(() => {
     process.stdout.write('Sucessfully passed pre-commit checks.');
+    process.exit(0);
   })
   .catch(err => {
     const errorMessage = `Error: ${err.message || JSON.stringify(err)}`;

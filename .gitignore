@@ -87,9 +87,9 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
-  # Editor-specific files
-  .vscode/
-  .idea/
 
-  work/
+.vscode/
+.idea/
+
+work/
 
