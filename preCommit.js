@@ -90,14 +90,11 @@ const checkForWarnings = () => {
 
 getCurrentBranch()
   .then(ret => {
-    const currentBranch = ret.stdout;
-    for (const branch of forbiddenBranches) {
-      if (currentBranch.includes(branch)) {
-        resetAndExit(
-          `Oops, you are on the ${branch} branch. Please switch branches before you commit.`,
-        );
-      }
-    }
+    const currentBranch = ret.stdout.trim().replace('\n', '');
+    return forbiddenBranches.find(branch => branch === currentBranch);
+  })
+  .then((ret) => {
+    return ret ? resetAndExit(`Oops, you are on the ${ret} branch. Please switch branches before you commit.`) : undefined;
   })
   .then(() => {
     checkForWarnings();

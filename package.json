@@ -13,7 +13,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "lint": "eslint . --ext .js"
+    "lint": "eslint . --ext .js",
+    "preCommit": "node preCommit.js"
   },
   "repository": {
     "type": "git",
