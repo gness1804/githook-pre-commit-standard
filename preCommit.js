@@ -16,101 +16,52 @@ const resetAndExit = message => {
     });
 };
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-const askUserAboutWarning = (warning, fileName) => {
-  return new Promise(resolve => {
-    rl.question(
-      `There is one or more instance of ${warning} in ${fileName}. Continue?`,
-      answer => {
-        const yesRegex = /(y$|yes)/gi;
-        if (yesRegex.test(answer)) {
-          resolve();
-        } else {
-          resetAndExit('Aborting.');
-        }
-      },
-    );
-  });
-};
-
 const forbiddenBranches = ['master', 'develop'];
 
-const getCurrentBranch = () => {
-  return promisifiedExec('git rev-parse --abbrev-ref HEAD');
-};
+const getCurrentBranch = () => promisifiedExec('git rev-parse --abbrev-ref HEAD');
 
-const getListOfChangedFiles = () => {
-  return promisifiedExec('git diff --name-only');
-};
+const getListOfChangedFiles = () => promisifiedExec('git diff --name-only');
 
 const checkFile = async (data, name) => {
   if (data.match(/debugger/g) && data.match(/debugger/g).length) {
-    await askUserAboutWarning(/debugger/g, name);
+    resetAndExit('Error: debugger. Exiting.');
   }
   if (data.match(/console/g) && data.match(/console/g).length) {
-    await askUserAboutWarning(/console/g, name);
-  }
-  if (data.match(/HEAD/g) && data.match(/HEAD/g).length) {
-    await askUserAboutWarning(/HEAD/g, name);
+    resetAndExit('Error: console statement. Exiting.');
   }
   if (data.match(/it.only/g) && data.match(/it.only/g).length) {
-    await askUserAboutWarning(/it.only/g, name);
+    resetAndExit('Error: it.only. Exiting.');
   }
   if (data.match(/revert/g) && data.match(/revert/g).length) {
-    await askUserAboutWarning(/revert/g, name);
+    resetAndExit('Error: revert. Exiting.');
   }
-  if (data.match(/TODO/g) && data.match(/TODO/g).length) {
-    await askUserAboutWarning(/TODO/g, name);
-  }
-  if (data.match(/it.skip/g) && data.match(/it.skip/g).length) {
-    await askUserAboutWarning(/it.skip/g, name);
-  }
-  rl.close();
 };
 
 const loopThroughFiles = files => {
   for (const file of files) {
     if (file) {
-      promisifiedReadFile(file, 'utf-8').then(fileData =>
-        checkFile(fileData, file),
-      );
+      promisifiedReadFile(file, 'utf-8').then(fileData => checkFile(fileData, file));
     }
   }
 };
 
-const checkForWarnings = () => {
-  return getListOfChangedFiles()
-    .then(data => data.stdout.split('\n'))
-    .then(files => loopThroughFiles(files));
-};
+const checkForWarnings = () => getListOfChangedFiles()
+  .then(data => data.stdout.split('\n'))
+  .then(files => loopThroughFiles(files));
 
 getCurrentBranch()
   .then(ret => {
     const currentBranch = ret.stdout.trim().replace('\n', '');
     return forbiddenBranches.find(branch => branch === currentBranch);
   })
-  .then((ret) => {
-    return ret ? resetAndExit(`Oops, you are on the ${ret} branch. Please switch branches before you commit.`) : undefined;
-  })
+  .then((ret) => ret ? resetAndExit(`Oops, you are on the ${ret} branch. Please switch branches before you commit.`) : undefined)
   .then(() => {
     checkForWarnings();
   })
-  .then(() => {
-    return promisifiedExec('npm run prettier');
-  })
-  .then(() => {
-    return promisifiedExec('npm run lint');
-  })
-  .then(() => {
-    return promisifiedExec('npm run stylelint');
-  })
-  .then(() => {
-    return promisifiedExec('npm run test');
-  })
+  .then(() => promisifiedExec('npm run prettier'))
+  .then(() => promisifiedExec('npm run lint'))
+  .then(() => promisifiedExec('npm run stylelint'))
+  .then(() => promisifiedExec('npm run test'))
   .then(() => {
     process.stdout.write('Sucessfully passed pre-commit checks.');
   })

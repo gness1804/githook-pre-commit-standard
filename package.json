@@ -1,7 +1,7 @@
 {
   "name": "githooks",
   "version": "1.0.0",
-  "description": "These are my git hooks for pre-commit. They are modified based on the project, of course. Some functionality that is included:",
+  "description": "My githooks",
   "main": ".eslintrc.js",
   "dependencies": {
     "babel-eslint": "9.0.0",

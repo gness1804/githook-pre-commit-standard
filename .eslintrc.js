@@ -17,7 +17,6 @@ module.exports = {
     'func-names': 'off',
     'object-shorthand': 'off',
     'no-alert': 'off',
-    'arrow-body-style': 'off',
     'global-require': 'off',
     'flowtype-errors/show-errors': 'off',
     'no-plusplus': 'off',
@@ -27,8 +26,9 @@ module.exports = {
     'no-unused-vars': 'warn',
     'arrow-parens': 'off',
     'operator-linebreak': 'off',
-    'implicit-arrow-linebreak': 'off',
+    'implicit-arrow-linebreak': 'error',
     'function-paren-newline': 'off',
+    'no-confusing-arrow': 'off',
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
   }
