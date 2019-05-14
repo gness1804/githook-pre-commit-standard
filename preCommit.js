@@ -1,6 +1,5 @@
 const util = require('util');
 const { readFile } = require('fs');
-const readline = require('readline');
 const { exec } = require('child_process');
 
 const promisifiedExec = util.promisify(exec);
@@ -22,7 +21,7 @@ const getCurrentBranch = () => promisifiedExec('git rev-parse --abbrev-ref HEAD'
 
 const getListOfChangedFiles = () => promisifiedExec('git diff --name-only');
 
-const checkFile = async (data, name) => {
+const checkFile = async (data) => {
   if (data.match(/debugger/g) && data.match(/debugger/g).length) {
     resetAndExit('Error: debugger. Exiting.');
   }
@@ -40,7 +39,7 @@ const checkFile = async (data, name) => {
 const loopThroughFiles = files => {
   for (const file of files) {
     if (file) {
-      promisifiedReadFile(file, 'utf-8').then(fileData => checkFile(fileData, file));
+      promisifiedReadFile(file, 'utf-8').then(fileData => checkFile(fileData));
     }
   }
 };
