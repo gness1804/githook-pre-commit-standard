@@ -36,18 +36,18 @@ const getListOfChangedFiles = () => promisifiedExec('git diff HEAD --name-only')
  * @returns {Promise<Function | void>} - promise that resolves or that rejects into a function
  * that exists the program
  */
-const checkFile = data => new Promise((resolve, reject) => {
+const checkFile = (fileName, data) => new Promise((resolve, reject) => {
   if (data.match(/debugger/g) && data.match(/debugger/g).length) {
-    reject(resetAndExit('Error: debugger. Exiting.'));
+    reject(resetAndExit(`Error: debugger in ${fileName}. Exiting.`));
   }
   if (data.match(/console/g) && data.match(/console/g).length) {
-    reject(resetAndExit('Error: console statement. Exiting.'));
+    reject(resetAndExit(`Error: console statement in ${fileName}. Exiting.`));
   }
   if (data.match(/it.only/g) && data.match(/it.only/g).length) {
-    reject(resetAndExit('Error: it.only. Exiting.'));
+    reject(resetAndExit(`Error: it.only in ${fileName}. Exiting.`));
   }
   if (data.match(/revert/g) && data.match(/revert/g).length) {
-    reject(resetAndExit('Error: revert. Exiting.'));
+    reject(resetAndExit(`Error: revert in ${fileName}. Exiting.`));
   } else {
     resolve();
   }
@@ -60,7 +60,7 @@ const checkFile = data => new Promise((resolve, reject) => {
 const loopThroughFiles = files => {
   for (const file of files) {
     if (file) {
-      promisifiedReadFile(file, 'utf-8').then(fileData => checkFile(fileData));
+      promisifiedReadFile(file, 'utf-8').then(fileData => checkFile(file, fileData));
     }
   }
 };
