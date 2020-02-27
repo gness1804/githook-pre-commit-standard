@@ -1,0 +1,37 @@
+#!/bin/bash
+
+function resetAndExit()
+{
+  git reset HEAD . && exit 1;
+}
+
+# verify that user is not trying to commit to master or develop
+function checkBranches()
+{
+if test "$(git rev-parse --abbrev-ref HEAD)" == $1; then
+  echo "Oops, you are on the $1 branch. Please switch branches before you commit." >&2
+  resetAndExit
+fi
+}
+
+if git diff | grep console >/dev/null; then
+   echo "Oops! You have a console statement in your code. Please remove it."
+   exit 1
+fi
+
+forbiddenBranches=(master develop)
+
+for i in "${forbiddenBranches[@]}"
+do
+  checkBranches "$i"
+done
+
+{
+  npm run lint
+  } || {
+    echo  "npm run lint failed."
+    resetAndExit
+}
+
+echo "Successfully passed pre-commit checks."
+exit 0
