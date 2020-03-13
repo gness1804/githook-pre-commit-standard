@@ -26,6 +26,12 @@ if git diff | grep it.only >/dev/null; then
    exit 1
 fi
 
+if git diff | grep 'revert this' >/dev/null; then
+   echo "Oops! You have a revert statement in your code. Please remove it."
+   echo $(git diff | grep 'revert this')
+   exit 1
+fi
+
 forbiddenBranches=(master develop)
 
 for i in "${forbiddenBranches[@]}"
