@@ -1,16 +1,11 @@
 #!/bin/bash
 
-function resetAndExit()
-{
-  git reset HEAD . && exit 1;
-}
-
 # verify that user is not trying to commit to master or develop
 function checkBranches()
 {
 if test "$(git rev-parse --abbrev-ref HEAD)" == $1; then
   echo "Oops, you are on the $1 branch. Please switch branches before you commit." >&2
-  resetAndExit
+  exit 1
 fi
 }
 
@@ -55,7 +50,7 @@ done
   npm run lint
   } || {
     echo  "npm run lint failed."
-    resetAndExit
+    exit 1
 }
 
 echo "Successfully passed pre-commit checks."
