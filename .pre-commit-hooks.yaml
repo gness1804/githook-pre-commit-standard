@@ -1,5 +1,0 @@
--   id: no-master-branch
-    name: Forbid commit on master branch.
-    description: Rejects if user attempts to commit on the master branch.
-    entry: no-master-branch.sh
-    language: system
