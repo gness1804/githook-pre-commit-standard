@@ -16,9 +16,11 @@
     "start:build": "tsc -w",
     "build": "tsc",
     "prettier:check": "prettier --check src/*",
-    "prettier:write": "prettier --write src/*"
+    "prettier:write": "prettier --write src/*",
+    "no-console": "bash dist/noConsole.sh"
   },
   "pre-commit": [
+    "no-console",
     "prettier:check",
     "lint"
   ],
