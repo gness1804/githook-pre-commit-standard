@@ -6,6 +6,9 @@ import { PreCommit } from './PreCommit';
 
   const cleanedBranch = branch.trim().replace('\n', '');
 
-  if (cleanedBranch === 'master' || cleanedBranch === 'main') preCommit.resetAndExit();
+  if (cleanedBranch === 'master' || cleanedBranch === 'main')
+    preCommit.resetAndExit(
+      `Oops! You are on the ${branch} branch. Please check out a non-master branch and try again.`,
+    );
   else console.info('Branch name checks out.');
 })();

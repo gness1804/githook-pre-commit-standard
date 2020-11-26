@@ -13,7 +13,9 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "preCommit": "node preCommit.js",
     "start:build": "tsc -w",
-    "build": "tsc"
+    "build": "tsc",
+    "prettier:check": "prettier --check src/*",
+    "prettier:write": "prettier --write src/*"
   },
   "repository": {
     "type": "git",
@@ -28,6 +30,7 @@
   "homepage": "https://github.com/gness1804/githook-pre-commit-standard#readme",
   "dependencies": {
     "@types/node": "^14.14.10",
+    "prettier": "^2.2.0",
     "ts-node": "^9.0.0"
   }
 }

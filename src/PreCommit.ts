@@ -1,5 +1,5 @@
-const { exec } = require("child_process");
-const util = require("util");
+const { exec } = require('child_process');
+const util = require('util');
 const promisifiedExec = util.promisify(exec);
 
 interface CurrBranchRes {
@@ -9,7 +9,7 @@ interface CurrBranchRes {
 
 export class PreCommit {
   getCurrentBranch(): Promise<CurrBranchRes> {
-    return promisifiedExec("git rev-parse --abbrev-ref HEAD");
+    return promisifiedExec('git rev-parse --abbrev-ref HEAD');
   }
 
   resetAndExit(message?: string): void {
