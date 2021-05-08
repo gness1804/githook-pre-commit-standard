@@ -10,6 +10,7 @@ var PreCommit = /** @class */ (function () {
     PreCommit.prototype.getCurrentBranch = function () {
         return promisifiedExec('git rev-parse --abbrev-ref HEAD');
     };
+    /* eslint-disable no-console */
     PreCommit.prototype.resetAndExit = function (message) {
         if (message)
             console.error(message);

@@ -13,5 +13,6 @@ module.exports = {
   rules: {
     '@typescript-eslint/ban-types': 'warn',
     '@typescript-eslint/no-unused-vars': 'error',
+    "no-console": "error",
   },
 };

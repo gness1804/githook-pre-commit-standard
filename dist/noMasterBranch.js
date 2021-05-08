@@ -49,7 +49,7 @@ var PreCommit_1 = require("./PreCommit");
                 cleanedBranch = branch.trim().replace('\n', '');
                 if (cleanedBranch === 'master' || cleanedBranch === 'main')
                     preCommit.resetAndExit("Oops! You are on the " + branch + " branch. Please check out a non-master branch and try again.");
-                else
+                /* eslint-disable no-console */ else
                     console.info('Branch name checks out.');
                 return [2 /*return*/];
         }

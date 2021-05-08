@@ -10,5 +10,5 @@ import { PreCommit } from './PreCommit';
     preCommit.resetAndExit(
       `Oops! You are on the ${branch} branch. Please check out a non-develop branch and try again.`,
     );
-  else console.info('Branch name checks out.');
+  /* eslint-disable no-console */ else console.info('Branch name checks out.');
 })();

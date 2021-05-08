@@ -19,12 +19,11 @@
     "prettier:write": "prettier --write src/*",
     "no-console": "bash dist/noConsole.sh",
     "no-debug": "bash dist/noDebug.sh",
-    "no-revert": "bash dist/noRevert.sh"
+    "no-revert": "zx dist/noRevert.mjs"
   },
   "pre-commit": [
-    "no-console",
-    "prettier:check",
-    "lint"
+    "lint",
+    "prettier:check"
   ],
   "repository": {
     "type": "git",

@@ -12,6 +12,7 @@ export class PreCommit {
     return promisifiedExec('git rev-parse --abbrev-ref HEAD');
   }
 
+  /* eslint-disable no-console */
   resetAndExit(message?: string): void {
     if (message) console.error(message);
     else console.error('Pre-Commit failed.');
