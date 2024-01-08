@@ -12,6 +12,8 @@ fi
 
 forbiddenBranches=(master develop)
 
+echo "Checking branches..."
+
 for i in "${forbiddenBranches[@]}"
 do
   checkBranches "$i"
