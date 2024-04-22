@@ -10,7 +10,7 @@ if test "$(git rev-parse --abbrev-ref HEAD)" == $1; then
 fi
 }
 
-forbiddenBranches=(master develop)
+forbiddenBranches=(master develop main)
 
 echo "Checking branches..."
 
